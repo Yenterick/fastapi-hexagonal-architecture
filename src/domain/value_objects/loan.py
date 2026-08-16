@@ -4,14 +4,15 @@ from datetime import date, datetime
 from src.domain.entities.book import Book
 from src.domain.entities.user import User
 
+
 @dataclass
 class Loan:
-    id: int
+    id: int | None
     book: Book
     user: User
     loan_date: date
     due_date: date
-    created_at: datetime
+    created_at: datetime | None
 
     def __post_init__(self):
         if self.due_date < self.loan_date:
