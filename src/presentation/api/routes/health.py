@@ -4,5 +4,5 @@ router = APIRouter(prefix="/health", tags=["health"])
 
 
 @router.get("/", description="Endpoint to check the server health.")
-def health_check():
-    return "Library API is up and running!..."
+async def health_check():
+    return {"status": "ok", "message": "Library API is up and running!"}

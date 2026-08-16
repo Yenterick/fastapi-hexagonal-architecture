@@ -16,4 +16,4 @@ class Loan:
 
     def __post_init__(self):
         if self.due_date < self.loan_date:
-            raise ValueError("due date cannot be earlier than loan date")
+            raise ValueError("due_date must be later than or equal to loan_date")
