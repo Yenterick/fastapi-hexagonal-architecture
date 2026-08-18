@@ -11,7 +11,7 @@ class LoginUserUseCase:
         self.auth_service = auth_service
 
     async def execute(self, body: LoginUserRequest) -> LoginUserResponse:
-        user: User = await self.user_repository.get_by_username(body.username)
+        user = await self.user_repository.get_by_username(body.username)
 
         if user is None:
             raise UserNotFoundError(body.username)
@@ -19,8 +19,5 @@ class LoginUserUseCase:
         if not self.auth_service.verify_password(body.password, user.password):
             raise InvalidCredentialsError()
 
-        token = self.auth_service.create_access_token(
-            {"id": user.id, "username": user.username}
-        )
-
-        return LoginUserResponse(id=user.id, token=token)
+        token = self.auth_service.create_access_token(user.id)  # type: ignore
+        return LoginUserResponse(id=user.id, token=token)  # type: ignore

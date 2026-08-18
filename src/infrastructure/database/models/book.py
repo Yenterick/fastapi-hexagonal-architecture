@@ -3,7 +3,7 @@ from sqlmodel import JSON, Field, SQLModel, Column, DateTime, Numeric
 
 
 class Book(SQLModel, table=True):
-    __tablename__ = "books"
+    __tablename__ = "books"  # type: ignore
 
     id: int | None = Field(default=None, primary_key=True)
     isbn: str
@@ -13,7 +13,7 @@ class Book(SQLModel, table=True):
         sa_column=Column(Numeric(6, 2, asdecimal=False), nullable=False)
     )
     genres: list[str] = Field(default=[], sa_column=Column(JSON))
-    created_at: datetime = Field(
+    created_at: datetime | None = Field(
         default_factory=lambda: datetime.now(timezone.utc),
         sa_column=Column(DateTime(timezone=True), nullable=False),
     )

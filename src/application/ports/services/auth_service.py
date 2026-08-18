@@ -14,7 +14,7 @@ class AuthService(ABC):
         """Return the hash of a <plain> string"""
 
     @abstractmethod
-    def get_current_user(self, token: str) -> User | None:
+    async def get_current_user(self, token: str) -> User | None:
         """Decode an OAuth access <token> and return the User"""
 
     @abstractmethod
@@ -22,5 +22,7 @@ class AuthService(ABC):
         """Authenticate user <user> and <plain> password"""
 
     @abstractmethod
-    def create_access_token(self, data: dict, expires: timedelta | None = None) -> str:
+    def create_access_token(
+        self, user_id: int, expires: timedelta | None = None
+    ) -> str:
         """Return a JWT access token"""

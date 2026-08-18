@@ -1,7 +1,7 @@
 from typing import AsyncGenerator
 
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
-from sqlalchemy.pool import QueuePool
+from sqlalchemy.pool import AsyncAdaptedQueuePool
 
 from src.infrastructure.config.settings import settings
 
@@ -11,7 +11,7 @@ DATABASE_URL = f"postgresql+asyncpg://{settings.POSTGRES_USER}:{settings.POSTGRE
 engine = create_async_engine(
     DATABASE_URL,
     echo=False,
-    poolclass=QueuePool,
+    poolclass=AsyncAdaptedQueuePool,
     pool_size=20,
     max_overflow=10,
     pool_pre_ping=True,

@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from jose import jwt, JWTError
 from passlib.context import CryptContext
 
@@ -16,7 +16,7 @@ class JWTAuthService(AuthService):
     def __init__(self, user_repository: UserRepository):
         self.user_repository = user_repository
 
-    def _verify_password(self, plain: str, hash: str) -> bool:
+    def verify_password(self, plain: str, hash: str) -> bool:
         return pwd_context.verify(plain, hash)
 
     def get_hash(self, plain: str) -> str:
@@ -25,26 +25,28 @@ class JWTAuthService(AuthService):
     async def get_current_user(self, token: str) -> User | None:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            if not (id := payload.get("sub")):
+            if not (user_id := payload.get("sub")):
                 return None
         except JWTError:
             return None
 
-        user: User | None = await self.user_repository.get_by_id(id)
+        user: User | None = await self.user_repository.get_by_id(user_id)
         return user
 
     def auth_user(self, user: User, plain: str) -> User | None:
-        if not self._verify_password(plain, user.password):
+        if not self.verify_password(plain, user.password):
             return None
         else:
             return user
 
-    def create_access_token(self, id: int, expires: timedelta | None = None) -> str:
-        now: datetime = datetime.now()
+    def create_access_token(
+        self, user_id: int, expires: timedelta | None = None
+    ) -> str:
+        now = datetime.now(timezone.utc)
 
         if not expires:
             expires = timedelta(minutes=60)
-        src: dict = {"sub": id, "exp": now + expires}
+        src: dict = {"sub": user_id, "exp": now + expires}
 
         encoded_jwt: str = jwt.encode(src, SECRET_KEY, algorithm=ALGORITHM)
         return encoded_jwt
