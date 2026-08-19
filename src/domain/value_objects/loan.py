@@ -8,8 +8,8 @@ from src.domain.entities.user import User
 @dataclass
 class Loan:
     id: int | None
-    book: Book
-    user: User
+    book: Book | None
+    user: User | None
     loan_date: date
     due_date: date
     created_at: datetime | None

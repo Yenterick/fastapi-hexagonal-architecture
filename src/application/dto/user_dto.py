@@ -14,7 +14,7 @@ class RegisterUserResponse(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
-    id: int = Field(description="The unique identifier of the user")
+    id: int | None = Field(description="The unique identifier of the user")
     full_name: str = Field(description="The full name of the user")
     username: str = Field(description="The username of the user")
 

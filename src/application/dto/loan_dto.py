@@ -22,7 +22,7 @@ class MakeLoanResponse(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
-    id: int = Field(description="The unique identifier of the loan")
+    id: int | None = Field(description="The unique identifier of the loan")
     book_id: int = Field(description="The unique identifier of the book")
     user_id: int = Field(description="The unique identifier of the user")
     loan_date: date = Field(description="The date when the book is loaned")
@@ -40,7 +40,7 @@ class ReturnLoanResponse(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
-    id: int = Field(description="The unique identifier of the loan")
+    id: int | None = Field(description="The unique identifier of the loan")
     book_id: int = Field(description="The unique identifier of the book")
     user_id: int = Field(description="The unique identifier of the user")
     loan_date: date = Field(description="The date when the book was loaned")

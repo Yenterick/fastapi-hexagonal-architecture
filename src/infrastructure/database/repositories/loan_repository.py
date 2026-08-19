@@ -6,6 +6,7 @@ from src.application.ports.repositories.loan_repository import LoanRepository
 from src.application.ports.repositories.user_repository import UserRepository
 from src.application.ports.repositories.book_repository import BookRepository
 from src.infrastructure.database.models.loan import Loan as LoanModel
+from src.application.exceptions import UserNotFoundError
 
 
 class SqlAlchemyLoanRepository(LoanRepository):
@@ -32,14 +33,20 @@ class SqlAlchemyLoanRepository(LoanRepository):
 
         return await self._to_domain(db_loan)
 
-    async def delete(self, loan_id: int) -> None:
+    async def delete(self, loan_id: int) -> Loan | None:
         result = await self.session.execute(select(LoanModel).where(LoanModel.id == loan_id))  # type: ignore
         result = result.scalar_one_or_none()
 
         await self.session.delete(result)
         await self.session.commit()
 
-    async def get_by_user_id(self, user_id: int) -> list[Loan]:
+        if isinstance(result, LoanModel):
+            return await self._to_domain(result)
+
+    async def get_by_user_id(self, user_id: int | None) -> list[Loan]:
+        if user_id is None:
+            raise UserNotFoundError(str(user_id))
+
         result = await self.session.scalars(select(LoanModel).where(LoanModel.user_id == user_id))  # type: ignore
         db_loans = result.all()
 

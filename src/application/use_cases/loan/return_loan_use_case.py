@@ -8,4 +8,12 @@ class ReturnLoanUseCase:
         self.loan_repository = loan_repository
 
     async def execute(self, user: User, body: ReturnLoanRequest) -> ReturnLoanResponse:
-        pass
+        loan = await self.loan_repository.delete(body.loan_id)
+
+        return ReturnLoanResponse(
+            id=loan.id,  # type: ignore
+            book_id=loan.book.id,  # type: ignore
+            user_id=loan.user.id,  # type: ignore
+            loan_date=loan.loan_date,  # type: ignore
+            due_date=loan.due_date,  # type: ignore
+        )
