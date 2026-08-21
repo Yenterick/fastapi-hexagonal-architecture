@@ -15,3 +15,13 @@ class UserAlreadyExistsError(ApplicationError):
 class InvalidCredentialsError(ApplicationError):
     def __init__(self):
         super().__init__("Invalid username or password")
+
+
+class AuthorizationError(ApplicationError):
+    def __init__(self):
+        super().__init__("Invalid JWT token")
+
+
+class LoanNotFoundError(ApplicationError):
+    def __init__(self, identifier: str | int):
+        super().__init__(f"Loan not found: {identifier}")

@@ -6,6 +6,7 @@ from src.application.ports.repositories.user_repository import UserRepository
 from src.application.ports.services.auth_service import AuthService
 from src.domain.entities.user import User
 from src.infrastructure.config.settings import settings
+from src.application.exceptions import AuthorizationError
 
 SECRET_KEY = settings.SECRET_KEY
 ALGORITHM = "HS256"
@@ -28,7 +29,7 @@ class JWTAuthService(AuthService):
             if not (user_id := payload.get("sub")):
                 return None
         except JWTError:
-            return None
+            raise AuthorizationError
 
         user: User | None = await self.user_repository.get_by_id(user_id)
         return user

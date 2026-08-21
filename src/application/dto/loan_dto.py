@@ -6,7 +6,6 @@ class MakeLoanRequest(BaseModel):
     """Request model for making a new loan"""
 
     book_id: int = Field(description="The unique identifier of the book")
-    user_id: int = Field(description="The unique identifier of the user")
     loan_date: date = Field(description="The date when the book is loaned")
     due_date: date = Field(description="The date when the book is due to be returned")
 

@@ -1,6 +1,7 @@
 from src.domain.entities.user import User
 from src.application.dto.loan_dto import ReturnLoanRequest, ReturnLoanResponse
 from src.application.ports.repositories.loan_repository import LoanRepository
+from src.application.exceptions import LoanNotFoundError
 
 
 class ReturnLoanUseCase:
@@ -8,6 +9,11 @@ class ReturnLoanUseCase:
         self.loan_repository = loan_repository
 
     async def execute(self, user: User, body: ReturnLoanRequest) -> ReturnLoanResponse:
+        user_loans = await self.loan_repository.get_by_user_id(user.id)
+
+        if not any(loan.id == body.loan_id for loan in user_loans):
+            raise LoanNotFoundError(body.loan_id)
+
         loan = await self.loan_repository.delete(body.loan_id)
 
         return ReturnLoanResponse(
