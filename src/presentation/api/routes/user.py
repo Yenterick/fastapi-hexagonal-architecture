@@ -13,7 +13,7 @@ from src.application.dto.user_dto import (
 )
 from src.presentation.api.deps import get_user_repository, get_auth_service
 
-router = APIRouter(prefix="/auth", tags=["user", "auth"])
+router = APIRouter(prefix="/auth", tags=["auth"])
 
 
 @router.post(
